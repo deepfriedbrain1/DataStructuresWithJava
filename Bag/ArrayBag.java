@@ -28,15 +28,16 @@ public final class ArrayBag<E> implements BagInterface<E> {
     @Override
     public int getSize() {
         return numOfEntries;
-    }
+    }// end getSize
 
     @Override
     public boolean isEmpty() {
         return numOfEntries == 0;
-    }
+    }// end isEmpty
 
     @Override
     public boolean add(E newEntry) {
+        checkInitialization();
         boolean added = true;
         if(isArrayFull()){
             added = false;
@@ -45,32 +46,56 @@ public final class ArrayBag<E> implements BagInterface<E> {
             numOfEntries++;
         }
         return added;
-    }
+    }// end add
 
     @Override
     public E remove() {
-        return null;
-    }
+        checkInitialization();
+        E entry = null;
+        if(numOfEntries > 0){
+            entry = bag[numOfEntries -1];
+            numOfEntries--;
+        }
+        return entry;
+    }// end remove
 
     @Override
     public boolean remove(E anEntry) {
         return false;
-    }
+    }// end remove
 
     @Override
     public void clear() {
-
-    }
+        while(!isEmpty()){
+            remove();
+        }
+    }// end clear
 
     @Override
     public int getFrequencyOf(E anEntry) {
-        return 0;
-    }
+        checkInitialization();
+        int freq = 0;
+        for(int idx = 0; idx < numOfEntries; idx++){
+            if(anEntry.equals(bag[idx])){
+                freq++;
+            }
+        }
+        return freq;
+    }// end getFrequencyOf
 
     @Override
     public boolean contains(E anEntry) {
-        return false;
-    }
+        checkInitialization();
+        boolean found = false;
+        int idx = 0;
+        while(!found && (idx < numOfEntries)){
+            if(anEntry.equals(bag[idx])){
+                found = true;
+            }
+            idx++;
+        }
+        return found;
+    }// end contains
 
     @Override
     public E[] toArray() {
@@ -84,5 +109,11 @@ public final class ArrayBag<E> implements BagInterface<E> {
 
     private boolean isArrayFull(){
         return numOfEntries >= bag.length;
+    }// end isArrayFull
+
+    private void checkInitialization(){
+        if(!initialized){
+            throw new SecurityException("ArrayBag object is not initialized properly.");
+        }
     }
-}
+}// end ArrayBag
