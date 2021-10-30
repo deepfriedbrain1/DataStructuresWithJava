@@ -51,17 +51,16 @@ public final class ArrayBag<E> implements BagInterface<E> {
     @Override
     public E remove() {
         checkInitialization();
-        E entry = null;
-        if(numOfEntries > 0){
-            entry = bag[numOfEntries -1];
-            numOfEntries--;
-        }
+        E entry = removeEntry(numOfEntries - 1);
         return entry;
     }// end remove
 
     @Override
     public boolean remove(E anEntry) {
-        return false;
+        checkInitialization();
+        int idx = getIndexOf(anEntry);
+        E entry = removeEntry(idx);
+        return entry.equals(anEntry);
     }// end remove
 
     @Override
@@ -115,5 +114,30 @@ public final class ArrayBag<E> implements BagInterface<E> {
         if(!initialized){
             throw new SecurityException("ArrayBag object is not initialized properly.");
         }
+    }
+
+    private E removeEntry(int index){
+        E entry = null;
+        if(!isEmpty() && (index >= 0)){
+            entry = bag[index];
+            bag[index] = bag[numOfEntries - 1];
+            bag[numOfEntries - 1] = null;
+            numOfEntries--;
+        }
+        return entry;
+    }
+
+    private int getIndexOf(E anEntry){
+        int location = -1;
+        boolean found = false;
+        int index = 0;
+        while(!found && (index < numOfEntries)){
+            if(anEntry.equals(bag[index])){
+                found = true;
+                location = index;
+            }
+            index++;
+        }
+        return location;
     }
 }// end ArrayBag
